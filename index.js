@@ -56,26 +56,6 @@ const queryDispatcher = new SPARQLQueryDispatcher("https://query.wikidata.org/sp
 const query = buildQuery(["Q90"]); // Q90 = Paris
 
 
-async function createGeojsonFile(outputFile) {
-
-
-	fsLibrary.readFile(templateFile, (error, data) => {
-		// In case of a error throw err exception. 
-		if (error) {
-			throw err;
-		}
-		else {
-			const template = data.toString();
-			const content = template.replace('<!-- Content here -->', filteredCards.map(printingFcn).join("\n"))
-				.replace('<!-- DATE HERE -->', env.SEND_DATE);
-
-			writeFile(outputFile, content);
-		}
-	})
-}
-
-
-
 // REAL TREATMENT STARTS HERE
 
 (async () => {
