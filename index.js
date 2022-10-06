@@ -1,5 +1,7 @@
 const fetch = require('node-fetch');
 
+const { writeFile, logging } = require("./utils");
+
 class SPARQLQueryDispatcher {
 	constructor(endpoint) {
 		this.endpoint = endpoint;
@@ -54,6 +56,26 @@ const queryDispatcher = new SPARQLQueryDispatcher("https://query.wikidata.org/sp
 const query = buildQuery(["Q90"]); // Q90 = Paris
 
 
+async function createGeojsonFile(outputFile) {
+
+
+	fsLibrary.readFile(templateFile, (error, data) => {
+		// In case of a error throw err exception. 
+		if (error) {
+			throw err;
+		}
+		else {
+			const template = data.toString();
+			const content = template.replace('<!-- Content here -->', filteredCards.map(printingFcn).join("\n"))
+				.replace('<!-- DATE HERE -->', env.SEND_DATE);
+
+			writeFile(outputFile, content);
+		}
+	})
+}
+
+
+
 // REAL TREATMENT STARTS HERE
 
 (async () => {
@@ -61,5 +83,5 @@ const query = buildQuery(["Q90"]); // Q90 = Paris
 	queryDispatcher
 		.query(query)
 		.then(fetchGeojson)
-		.then(console.log);
+		.then(logging);
 })();
